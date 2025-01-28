@@ -21,6 +21,11 @@ class MainApp extends StatelessWidget {
                 fontWeight: FontWeight.w600)), // テキストの色が変わる
         useMaterial3: true, // Material3のデザインを使う
       ),
+      // ダークモードの設定
+      darkTheme: ThemeData(
+        colorSchemeSeed: Colors.deepPurple,
+        brightness: Brightness.dark,
+      ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
