@@ -12,9 +12,14 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        // .copyWith(surface: const Color(0xFFE6F5FC)),
-        useMaterial3: true,
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: Colors.deepPurple) // アプリの外観の色を設定できる
+                .copyWith(surface: Colors.blueGrey), // アプリの背景色が変わる
+        textTheme: const TextTheme(
+            bodyMedium: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600)), // テキストの色が変わる
+        useMaterial3: true, // Material3のデザインを使う
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
