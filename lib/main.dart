@@ -138,3 +138,21 @@ class MyTheme extends ThemeExtension<MyTheme> {
     );
   }
 }
+
+class ThemedWidget extends StatelessWidget {
+  const ThemedWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // themeDataクラスのインスタンスを取得
+    final themeData = Theme.of(context);
+    // MyThemeクラスのインスタンスを取得
+    final myTheme = themeData.extension<MyTheme>();
+    final color = myTheme?.themeColor ?? Colors.blue; // nullの場合のフォールバック値を設定
+    return Container(
+      width: 100,
+      height: 100,
+      color: color,
+    );
+  }
+}
