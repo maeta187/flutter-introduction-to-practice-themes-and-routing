@@ -12,19 +12,22 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme:
-            ColorScheme.fromSeed(seedColor: Colors.deepPurple) // アプリの外観の色を設定できる
-                .copyWith(surface: Colors.blueGrey), // アプリの背景色が変わる
-        textTheme: const TextTheme(
-            bodyMedium: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600)), // テキストの色が変わる
-        useMaterial3: true, // Material3のデザインを使う
+        // colorScheme:
+        //     ColorScheme.fromSeed(seedColor: Colors.deepPurple) // アプリの外観の色を設定できる
+        //         .copyWith(surface: Colors.blueGrey), // アプリの背景色が変わる
+        // textTheme: const TextTheme(
+        //     bodyMedium: TextStyle(
+        //         color: Colors.white,
+        //         fontWeight: FontWeight.w600)), // テキストの色が変わる
+        // useMaterial3: true, // Material3のデザインを使う
+        colorSchemeSeed: Colors.deepPurple,
+        extensions: const [MyTheme(themeColor: Color(0xFF0000FF))],
       ),
       // ダークモードの設定
       darkTheme: ThemeData(
         colorSchemeSeed: Colors.deepPurple,
         brightness: Brightness.dark,
+        extensions: const [MyTheme(themeColor: Color(0xFF0000FF))],
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -105,6 +108,33 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // この末尾のカンマは、ビルドメソッドの自動フォーマットをより良くします。
+    );
+  }
+}
+
+class MyTheme extends ThemeExtension<MyTheme> {
+  const MyTheme({
+    required this.themeColor,
+  });
+
+  final Color themeColor;
+
+  // 任意のフィールドを変更したコピーをインスタンス化するためのメソッド
+  @override
+  MyTheme copyWith({Color? themeColor}) {
+    return MyTheme(
+      themeColor: themeColor ?? this.themeColor,
+    );
+  }
+
+  // テーマ変更時にアニメーション処理するためのメソッド
+  @override
+  MyTheme lerp(MyTheme? other, double t) {
+    if (other is! MyTheme) {
+      return this;
+    }
+    return MyTheme(
+      themeColor: Color.lerp(themeColor, other.themeColor, t) ?? themeColor,
     );
   }
 }
