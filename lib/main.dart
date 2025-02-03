@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MainApp());
-}
-
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
@@ -30,6 +26,56 @@ class MainApp extends StatelessWidget {
         extensions: const [MyTheme(themeColor: Color(0xFF0000FF))],
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    );
+  }
+}
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _isDarkMode = false;
+
+  void _toggleDarkMode() {
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        // 基準となる
+        colorSchemeSeed: Colors.green,
+        extensions: const [MyTheme(themeColor: Color(0xFF0000FF))],
+      ),
+      darkTheme: ThemeData(
+        colorSchemeSeed: Colors.green,
+        brightness: Brightness.dark,
+        extensions: const [MyTheme(themeColor: Color(0xFFFF0000))],
+      ),
+      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      home: Scaffold(
+        body: const Center(
+          child: ThemedWidget(),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _toggleDarkMode();
+          },
+          child: const Icon(Icons.settings_brightness),
+        ),
+      ),
     );
   }
 }
