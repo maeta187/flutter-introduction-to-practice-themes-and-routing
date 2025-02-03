@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MainApp());
-}
-
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
@@ -12,11 +8,74 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        // .copyWith(surface: const Color(0xFFE6F5FC)),
-        useMaterial3: true,
+        // colorScheme:
+        //     ColorScheme.fromSeed(seedColor: Colors.deepPurple) // アプリの外観の色を設定できる
+        //         .copyWith(surface: Colors.blueGrey), // アプリの背景色が変わる
+        // textTheme: const TextTheme(
+        //     bodyMedium: TextStyle(
+        //         color: Colors.white,
+        //         fontWeight: FontWeight.w600)), // テキストの色が変わる
+        // useMaterial3: true, // Material3のデザインを使う
+        colorSchemeSeed: Colors.deepPurple,
+        extensions: const [MyTheme(themeColor: Color(0xFF0000FF))],
+      ),
+      // ダークモードの設定
+      darkTheme: ThemeData(
+        colorSchemeSeed: Colors.deepPurple,
+        brightness: Brightness.dark,
+        extensions: const [MyTheme(themeColor: Color(0xFF0000FF))],
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    );
+  }
+}
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _isDarkMode = false;
+
+  void _toggleDarkMode() {
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        // 基準となる
+        colorSchemeSeed: Colors.green,
+        extensions: const [MyTheme(themeColor: Color(0xFF0000FF))],
+      ),
+      darkTheme: ThemeData(
+        colorSchemeSeed: Colors.green,
+        brightness: Brightness.dark,
+        extensions: const [MyTheme(themeColor: Color(0xFFFF0000))],
+      ),
+      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      home: Scaffold(
+        body: const Center(
+          child: ThemedWidget(),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _toggleDarkMode();
+          },
+          child: const Icon(Icons.settings_brightness),
+        ),
+      ),
     );
   }
 }
@@ -95,6 +154,51 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // この末尾のカンマは、ビルドメソッドの自動フォーマットをより良くします。
+    );
+  }
+}
+
+class MyTheme extends ThemeExtension<MyTheme> {
+  const MyTheme({
+    required this.themeColor,
+  });
+
+  final Color themeColor;
+
+  // 任意のフィールドを変更したコピーをインスタンス化するためのメソッド
+  @override
+  MyTheme copyWith({Color? themeColor}) {
+    return MyTheme(
+      themeColor: themeColor ?? this.themeColor,
+    );
+  }
+
+  // テーマ変更時にアニメーション処理するためのメソッド
+  @override
+  MyTheme lerp(MyTheme? other, double t) {
+    if (other is! MyTheme) {
+      return this;
+    }
+    return MyTheme(
+      themeColor: Color.lerp(themeColor, other.themeColor, t) ?? themeColor,
+    );
+  }
+}
+
+class ThemedWidget extends StatelessWidget {
+  const ThemedWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // themeDataクラスのインスタンスを取得
+    final themeData = Theme.of(context);
+    // MyThemeクラスのインスタンスを取得
+    final myTheme = themeData.extension<MyTheme>();
+    final color = myTheme?.themeColor ?? Colors.blue; // nullの場合のフォールバック値を設定
+    return Container(
+      width: 100,
+      height: 100,
+      color: color,
     );
   }
 }
